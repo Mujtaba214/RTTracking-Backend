@@ -1,3 +1,5 @@
+import { calculateDistanceAndEta } from "./controller/locatonController.js";
+
 let roomUsers = [];
 
 export const handleSocketConnection = (socket, io) => {
@@ -39,7 +41,29 @@ export const handleSocketConnection = (socket, io) => {
             duration = "N/A";
           }
         }
+        return {
+          userId: id,
+          lat: users[id].lat,
+          lng: users[id].lng,
+          distance,
+          duration,
+        };
       })
     );
+    io.to(roomId).emit("location update", updatedUsers);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected", socket.id);
+    const roomId = socket.roomId;
+    if (roomId && roomUsers[roomId]) delete roomUsers[roomId][socket.id];
+    io.to(roomId).emit(
+      "user-offline",
+      Object.keys(roomUsers[roomId]).map((id) => ({
+        userId: id,
+        ...roomUsers[roomId][id],
+      }))
+    );
+    if (Object.keys(roomUsers[roomId]).length === 0) delete roomUsers[roomId];
   });
 };
