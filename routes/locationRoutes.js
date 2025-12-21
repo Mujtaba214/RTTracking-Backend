@@ -1,7 +1,11 @@
 import express from "express";
-import { getRoute } from "../controller/locatonController.js";
+import { getRoute, updateLocation } from "../controller/locatonController.js";
 
 const router = express.Router()
 
-router.post('/route',getRoute)
+
+router.post('/update', updateLocation);
+router.get('/users', getAllUsers);
+router.post('/route', getRoute);
+
 export default router
