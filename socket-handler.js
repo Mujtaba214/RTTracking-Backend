@@ -55,8 +55,13 @@ export const handleSocketConnection = (socket, io) => {
 
   socket.on("disconnect", () => {
     console.log("User disconnected", socket.id);
+
     const roomId = socket.roomId;
-    if (roomId && roomUsers[roomId]) delete roomUsers[roomId][socket.id];
+
+    if (!roomId || !roomUsers[roomId]) return;
+
+    delete roomUsers[roomId][socket.id];
+
     io.to(roomId).emit(
       "user-offline",
       Object.keys(roomUsers[roomId]).map((id) => ({
@@ -64,6 +69,9 @@ export const handleSocketConnection = (socket, io) => {
         ...roomUsers[roomId][id],
       }))
     );
-    if (Object.keys(roomUsers[roomId]).length === 0) delete roomUsers[roomId];
+
+    if (Object.keys(roomUsers[roomId]).length === 0) {
+      delete roomUsers[roomId];
+    }
   });
 };

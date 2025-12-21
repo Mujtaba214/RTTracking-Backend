@@ -26,7 +26,7 @@ export const calculateDistanceAndEta = async (origin, destination) => {
     );
 
     const distanceKm = response.data.distances[0][1];
-    const durationSec = response.durations[0][1];
+    const durationSec = response.data.durations[0][1];
 
     return {
       distance: `${distanceKm.toFixed(2)} km`,
