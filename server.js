@@ -4,6 +4,9 @@ import http from "http";
 import { Server } from "socket.io";
 import { handleSocketConnection } from "./socket-handler.js";
 import locationRoutes from "./routes/locationRoutes.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -56,7 +59,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
